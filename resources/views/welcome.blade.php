@@ -62,7 +62,7 @@
                             </div>
                             <div>
                                 <p class="fs-3 fw-bolder pb-3">Делаем жизнь комфортней</p>
-                                <p class="fs-4 pb-3">Оформите полис ОСАГО в <strong>личном кабинете</strong></p>
+                                <p class="fs-4 pb-1">Оформите полис ОСАГО в <strong>личном кабинете</strong></p>
                                 <p class="fs-4">Присоединяйтесь к 2 млн
                                     клиентов, чья жизнь стала комфортнее</p>
                             </div>
@@ -139,8 +139,8 @@
                         <div class="row g-4 justify-content-center">
                             <div class="col-md-6 col-lg-4">
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
-                                    <img src="{{ asset('images/header-img.png') }}" class="card-img-top"
-                                        alt="image">
+                                    <img src="{{ asset('images/casco.png') }}" class="card-img-top img-fluid"
+                                        style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
                                     <div class="card-body">
                                         <h5 class="card-title fs-3 fw-bolder pb-3">Автострахование КАСКО</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
@@ -154,8 +154,8 @@
 
                             <div class="col-md-6 col-lg-4">
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
-                                    <img src="{{ asset('images/header-img.png') }}" class="card-img-top"
-                                        alt="image">
+                                    <img src="{{ asset('images/tourist.png') }}" class="card-img-top img-fluid"
+                                        style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
                                     <div class="card-body">
                                         <h5 class="card-title fs-3 fw-bolder pb-3">Страхование для туристов</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
@@ -169,10 +169,10 @@
 
                             <div class="col-md-6 col-lg-4">
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
-                                    <img src="{{ asset('images/header-img.png') }}" class="card-img-top"
-                                        alt="image">
+                                    <img src="{{ asset('images/property.png') }}" class="card-img-top img-fluid"
+                                        style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
                                     <div class="card-body">
-                                        <h5 class="card-title fs-3 fw-bolder pb-3">Страхование квартиры</h5>
+                                        <h5 class="card-title fs-3 fw-bolder pb-3">Страхование недвижимости</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
                                         </p>
                                         <a href="#" class="btn btn-primary text-white"
