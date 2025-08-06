@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ПРОФИТ</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-96x96.png') }}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}" />
@@ -43,7 +44,7 @@
                         </li>
                     </ul>
                     <div>
-                        <button id="authModalBtn" class="nav-link text-uppercase" href="#"><span
+                        <button id="authModalBtn" class="nav-link text-uppercase" style="border:none; outline:none;"><span
                                 class="p-2 text-white rounded" style="background-color: #1275ca;">Личный кабинет
                             </span></button>
                     </div>
@@ -195,8 +196,9 @@
                     onclick="switchTab('register')">Регистрация</button>
             </div>
 
-            <div id="login-form">
+            <div class="pt-2" id="login-form" style="max-width: 500px; width: 100%;">
                 <form id="loginForm">
+                    @csrf
                     <div class="form-group mb-3">
                         <label class="pb-1" for="login-email">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="login-email"
@@ -210,10 +212,17 @@
                     <button class="btn" type="submit"
                         style="background-color: #113a5d; border-color: #d7eafd;">Войти</button>
                 </form>
+                <div id="login-msg" class="p-3 text-center"></div>
             </div>
 
-            <div id="register-form" style="display:none;">
+            <div id="register-form" style="display:none; max-width: 500px; width: 100%;">
                 <form id="registerForm">
+                    @csrf
+                    <div class="form-group mb-3">
+                        <label class="pb-1" for="register-name">Имя</label>
+                        <input type="text" name="name" class="form-control" id="register-name"
+                            placeholder="Иванов Иван" autocomplete="name" required>
+                    </div>
                     <div class="form-group mb-3">
                         <label class="pb-1" for="register-email">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="register-email"
@@ -232,6 +241,8 @@
                     <button class="btn" type="submit"
                         style="background-color: #113a5d; border-color: #d7eafd;">Зарегистрироваться</button>
                 </form>
+                <div id="reg-msg" class="p-3 text-center text-danger"
+                    style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;"></div>
             </div>
         </div>
 
@@ -270,59 +281,87 @@
             }
         }
 
-        // AJAX-вход
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert('Вы успешно вошли');
-                Fancybox.close(); // Закрыть модалку
-                location.reload(); // Можно обновить страницу или направить в личный кабинет
-            } else {
-                alert(result.message || 'Ошибка входа');
+        document.addEventListener("DOMContentLoaded", function() {
+            function clearFormMessages() {
+                $('#reg-msg, #login-msg').text('').removeClass('text-danger text-success');
             }
-        });
 
-        // AJAX-регистрация
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+            $('#registerForm, #loginForm').on('focus input', 'input, select, textarea', clearFormMessages);
 
-            const formData = new FormData(this);
 
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                try {
+
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (response.ok && result.access_token) {
+                        localStorage.setItem('access_token', result.access_token);
+                        Fancybox.close();
+                        window.location.href = '/dashboard';
+                    } else {
+                        $('#login-msg').text(result.message || 'Ошибка регистрации').addClass('text-danger');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    $('#login-msg').text('Ошибка соединения с сервером.').addClass('text-danger');
+                }
             });
 
-            const result = await response.json();
-            if (response.ok) {
-                alert('Регистрация успешна');
-                Fancybox.close();
-                location.reload();
-            } else {
-                const msg = result.errors ?
-                    Object.values(result.errors).flat().join('\n') :
-                    (result.message || 'Ошибка регистрации');
-                alert(msg);
+            document.getElementById('registerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                try {
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.user) {
+                        this.reset();
+                        switchToLoginForm(result.user.email);
+                    } else {
+                        $('#reg-msg').text(result.message || 'Ошибка регистрации').addClass('text-danger');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    $('#reg-msg').text('Ошибка соединения с сервером.').addClass('text-danger');
+                }
+            });
+
+            function switchToLoginForm(email) {
+                $('#login-msg').text('Введите пароль для входа в приложение').addClass('text-success');
+                $('#login-email').val(email);
+                $('#login-password').val('');
+
+                $('#register-form').hide();
+                $('#login-form').show();
+
+                $('#registerTabBtn').removeClass('tabs-active');
+                $('#loginTabBtn').addClass('tabs-active');
             }
         });
     </script>
 </body>
-
 </html>
