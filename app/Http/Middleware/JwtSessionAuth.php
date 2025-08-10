@@ -28,13 +28,13 @@ class JwtSessionAuth
         }
 
         if (!$token) {
-            return response()->json(['error' => 'Unauthorized: token not provided'], 401);
+            abort(401, 'Unauthorized: token not provided');
         }
 
         try {           
             JWTAuth::setToken($token)->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Unauthorized: invalid token'], 401);
+            abort(401, 'Unauthorized: invalid token');
         }
       
         return $next($request);
