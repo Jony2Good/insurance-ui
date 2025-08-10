@@ -9,7 +9,10 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}" />
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}" />
-    <link rel="manifest" href="{{ asset('images/site.webmanifest') }}" />    
+    <link rel="manifest" href="{{ asset('images/site.webmanifest') }}" />   
+     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif 
     @include('dashboard.css.index')  
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">   
@@ -27,7 +30,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="bi bi-person"></i>
-                <span class="d-none d-md-inline">Имя пользователя</span>
+                <span class="d-none d-md-inline">{{auth()->user()->name}}</span>
               </a>            
             </li>           
           </ul>          

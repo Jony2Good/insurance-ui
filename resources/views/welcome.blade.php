@@ -44,8 +44,9 @@
                         </li>
                     </ul>
                     <div>
-                        <button id="authModalBtn" class="nav-link text-uppercase" style="border:none; outline:none;"><span
-                                class="p-2 text-white rounded" style="background-color: #1275ca;">Личный кабинет
+                        <button id="authModalBtn" class="nav-link text-uppercase"
+                            style="border:none; outline:none;"><span class="p-2 text-white rounded"
+                                style="background-color: #1275ca;">Личный кабинет
                             </span></button>
                     </div>
                 </div>
@@ -142,28 +143,31 @@
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
                                     <img src="{{ asset('images/casco.png') }}" class="card-img-top img-fluid"
                                         style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
-                                    <div class="card-body">
+                                    <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fs-3 fw-bolder pb-3">Автострахование КАСКО</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
                                         </p>
-                                        <a href="#" class="btn btn-primary text-white"
-                                            style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
-                                            стоимость</a>
+                                        <div class="mt-auto">
+                                            <a href="#" class="btn btn-primary text-white"
+                                                style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
+                                                стоимость</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6 col-lg-4">
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
                                     <img src="{{ asset('images/tourist.png') }}" class="card-img-top img-fluid"
                                         style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
-                                    <div class="card-body">
+                                    <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fs-3 fw-bolder pb-3">Страхование для туристов</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
                                         </p>
-                                        <a href="#" class="btn btn-primary text-white"
-                                            style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
-                                            стоимость</a>
+                                        <div class="mt-auto">
+                                            <a href="#" class="btn btn-primary text-white"
+                                                style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
+                                                стоимость</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -172,13 +176,15 @@
                                 <div class="card h-100 border border-3 layout" style="border-radius:10px">
                                     <img src="{{ asset('images/property.png') }}" class="card-img-top img-fluid"
                                         style="height:300px; max-height: 300px; object-fit: contain;" alt="image">
-                                    <div class="card-body">
+                                    <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fs-3 fw-bolder pb-3">Страхование недвижимости</h5>
                                         <p class="card-text">Расчет стоимости полиса на онлайн-калькуляторе за 1 минуту
                                         </p>
-                                        <a href="#" class="btn btn-primary text-white"
-                                            style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
-                                            стоимость</a>
+                                        <div class="mt-auto">
+                                            <a href="#" class="btn btn-primary text-white"
+                                                style="background-color: #113a5d; border-color: #d7eafd;">Рассчитать
+                                                стоимость</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -296,7 +302,7 @@
 
                 try {
 
-                    const response = await fetch('/api/login', {
+                    const response = await fetch('/login', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
@@ -307,12 +313,15 @@
                     });
 
                     const result = await response.json();
+                    console.log(result);
+                    
                     if (response.ok && result.access_token) {
                         localStorage.setItem('access_token', result.access_token);
                         Fancybox.close();
                         window.location.href = '/dashboard';
                     } else {
-                        $('#login-msg').text(result.message || 'Ошибка регистрации').addClass('text-danger');
+                        $('#login-msg').text(result.message || 'Ошибка регистрации').addClass(
+                            'text-danger');
                     }
                 } catch (error) {
                     console.error(error);
@@ -326,7 +335,7 @@
                 const formData = new FormData(this);
 
                 try {
-                    const response = await fetch('/api/register', {
+                    const response = await fetch('/register', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
@@ -342,7 +351,8 @@
                         this.reset();
                         switchToLoginForm(result.user.email);
                     } else {
-                        $('#reg-msg').text(result.message || 'Ошибка регистрации').addClass('text-danger');
+                        $('#reg-msg').text(result.message || 'Ошибка регистрации').addClass(
+                            'text-danger');
                     }
                 } catch (error) {
                     console.error(error);
@@ -364,4 +374,5 @@
         });
     </script>
 </body>
+
 </html>
