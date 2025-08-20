@@ -201,19 +201,20 @@
                 <button id="registerTabBtn" class="text-uppercase border p-3 border-5 rounded"
                     onclick="switchTab('register')">Регистрация</button>
             </div>
-
             <div class="pt-2" id="login-form" style="max-width: 500px; width: 100%;">
-                <form id="loginForm">
+                <form id="loginForm" autocomplete="off">
                     @csrf
                     <div class="form-group mb-3">
+                        <input type="email" name="fakeemail" style="display:none">
                         <label class="pb-1" for="login-email">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="login-email"
-                            aria-describedby="emailHelp" placeholder="example@mail.ru" autocomplete="email" required>
+                            aria-describedby="emailHelp" placeholder="example@mail.ru" autocomplete="new-email" required>
                     </div>
                     <div class="form-group mb-3">
+                        <input type="password" name="fakepasswordremembered" style="display:none">
                         <label class="pb-1" for="login-password">Пароль</label>
                         <input type="password" name="password" class="form-control" id="login-password"
-                            placeholder="Password" autocomplete="current-password" required>
+                            placeholder="Password" autocomplete="new-password" required>
                     </div>
                     <button class="btn" type="submit"
                         style="background-color: #113a5d; border-color: #d7eafd;">Войти</button>
@@ -222,28 +223,25 @@
             </div>
 
             <div id="register-form" style="display:none; max-width: 500px; width: 100%;">
-                <form id="registerForm">
+                <form id="registerForm" autocomplete="off">
                     @csrf
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3">                        
                         <label class="pb-1" for="register-name">Имя</label>
                         <input type="text" name="name" class="form-control" id="register-name"
-                            placeholder="Иванов Иван" autocomplete="name" required>
+                            placeholder="Иванов Иван" required>
                     </div>
                     <div class="form-group mb-3">
+                        <input type="email" name="fakeemail" style="display:none">
                         <label class="pb-1" for="register-email">Адрес электронной почты</label>
                         <input type="email" name="email" class="form-control" id="register-email"
-                            aria-describedby="emailHelp" placeholder="example@mail.ru" autocomplete="email" required>
+                            aria-describedby="emailHelp" placeholder="example@mail.ru" autocomplete="new-email" required>
                     </div>
                     <div class="form-group mb-3">
+                         <input type="password" name="fakepasswordremembered" style="display:none">
                         <label class="pb-1" for="register-password">Пароль</label>
-                        <input type="password" name="password" class="form-control" autocomplete="new-password"
-                            id="register-password" placeholder="Password" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="pb-1" for="password-confirmation">Повторите пароль</label>
-                        <input type="password" name="password_confirmation" class="form-control"
-                            id="password-confirmation" autocomplete="new-password" required>
-                    </div>
+                        <input type="password" name="password" class="form-control" 
+                            id="register-password" placeholder="Password" autocomplete="new-password" required>
+                    </div>                    
                     <button class="btn" type="submit"
                         style="background-color: #113a5d; border-color: #d7eafd;">Зарегистрироваться</button>
                 </form>

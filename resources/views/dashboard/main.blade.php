@@ -48,24 +48,16 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">На главную</a></li>
-                  <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('home') }}">Выйти из системы</a></li>
+                  <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('logout') }}">Выйти из системы</a></li>
                 </ol>
               </div>
             </div>        
           </div>        
-        </div>
-
-
-       
-        <div class="app-content">
-         
+        </div>       
+        <div class="app-content">         
          @yield('content')
-        </div>
-
-
-    
-      </main>
-  
+        </div>    
+      </main>  
       <footer class="app-footer">Создано в рамках учебного проекта</footer>     
     </div>    
     @include('dashboard.scripts.index')    
