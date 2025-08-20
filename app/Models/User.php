@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'birth_date',
+        'balance'
     ];
 
     /**
@@ -44,5 +46,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function docs()
+    {
+        return $this->hasOne(Document::class);
+    }
+
+    public function vehicle()
+    {
+        return $this->hasOne(UserVehicle::class);
+    }
+
+    public function driverLicense()
+    {
+        return $this->hasOne(DriverLicense::class);
+    }
+
+    public function policy()
+    {
+        return $this->hasOne(OsagoPolicy::class);
     }
 }

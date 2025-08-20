@@ -1,6 +1,9 @@
 @extends('dashboard.main')
 
 @section('content')
+@php
+$user = \App\Models\User::with(['docs', 'driverLicense'])->where('email', auth()->user()->email )->first();
+@endphp
     <div class="container mt-4">
         <h2>Персональная информация <button id="js-fill-btn" class="btn btn-primary d-none">Заполнить</button></h2>
         <p class="m-0 pb-3">Внимательно проверяйте, информация используется для формирования полиса</p>
@@ -21,7 +24,7 @@
                         <label>Email</label>
                         <input type="email" class="form-control" name="email" value="{{ auth()->user()->email }}"
                             disabled>
-                    </div>
+                    </div>                    
                     <div class="mb-3">
                         <label>Дата рождения</label>
                         <input type="text" class="form-control" name="birth_date" value="{{ $user->birth_date ?? '' }}"
@@ -37,56 +40,56 @@
                         <div class="mb-3">
                             <label>Серия</label>
                             <input type="text" class="form-control" name="passport_serie"
-                                value="{{ $doc->passport_serie ?? '' }}" disabled>
+                                value="{{ $user->docs->serie ?? '' }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label>Номер</label>
                             <input type="text" class="form-control" name="passport_number"
-                                value="{{ $doc->passport_number ?? '' }}" disabled>
+                                value="{{ $user->docs->number ?? '' }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label>Кем выдан</label>
                             <input type="text" class="form-control" name="passport_issued_by"
-                                value="{{ $doc->issued_by ?? '' }}" disabled>
+                                value="{{ $user->docs->issued_by ?? '' }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label>Дата выдачи</label>
                             <input type="text" class="form-control" name="passport_issue_date"
-                                value="{{ $doc->issue_date ?? '' }}" disabled>
+                                value="{{ $user->docs->issue_date ?? '' }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label>Адрес регистрации</label>
                             <input type="text" class="form-control" name="passport_registration_address"
-                                value="{{ $doc->registration_address ?? '' }}" disabled>
+                                value="{{ $user->docs->address ?? '' }}" disabled>
                         </div>
                     </div>
                     <div class="col">
                         <h4>Водительское удостоверение РФ</h4>
                         <div class="mb-3">
                             <label>Серия</label>
-                            <input type="text" class="form-control" name="dl_serie" value="{{ $dl->series ?? '' }}"
+                            <input type="text" class="form-control" name="dl_serie" value="{{ $user->driverLicense->serie ?? '' }}"
                                 disabled>
                         </div>
                         <div class="mb-3">
                             <label>Номер</label>
-                            <input type="text" class="form-control" name="dl_number" value="{{ $dl->number ?? '' }}"
+                            <input type="text" class="form-control" name="dl_number" value="{{ $user->driverLicense->number ?? '' }}"
                                 disabled>
                         </div>
                         <div class="mb-3">
                             <label>Кем выдан</label>
                             <input type="text" class="form-control" name="dl_issued_by"
-                                value="{{ $dl->issued_by ?? '' }}" disabled>
+                                value="{{ $user->driverLicense->issued_by ?? '' }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label>Дата выдачи</label>
                             <input type="text" class="form-control" name="dl_issue_date"
-                                value="{{ $dl->issue_date ?? '' }}" disabled>
-                        </div>
+                                value="{{ $user->driverLicense->issue_date ?? '' }}" disabled>
+                        </div>                      
                         <div class="mb-3">
                             <label>Категория ВУ</label>
                             <select id="select" class="form-control" name="dl_category">
-                                @if ($dl->category ?? '')
-                                    <option value="{{ $dl->value }}" selected> {{ $dl->category }}</option>
+                                @if ($user->driverLicense->category ?? '')
+                                    <option value="{{ $user->driverLicense->value }}" selected> {{ $user->driverLicense->category }}</option>
                                 @else
                                     <option value="0">Не выбрано</option>
                                     <option value="1">Грузовые</option>
@@ -114,7 +117,7 @@
             attachFillFakeDataHandler();
         });
 
-        $('#saveBtn').on('click', function() {
+        $('#saveBtn').on('click', function(e) {
             e.preventDefault();
 
             let userData = {
@@ -152,7 +155,13 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function() {
-                    $('#profileForm input').prop('disabled', true);
+
+
+
+
+
+
+                    $('#profileForm inputб #profileForm select').prop('disabled', true);
                     $('#editBtn').removeClass('d-none');
                     $('#saveBtn').addClass('d-none');
                     $('#js-fill-btn').addClass('d-none');
