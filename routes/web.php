@@ -14,8 +14,7 @@ Route::get('/', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::prefix('dashboard')
-    ->middleware([JwtSessionAuth::class])
+Route::prefix('dashboard')   
     ->group(function () {
         Route::get('/', fn() => view('dashboard.main'))->name('dashboard');
 

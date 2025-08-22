@@ -76,18 +76,15 @@ class AuthController extends Controller
             return response()->json($json, $response->status());
         }
 
-        $token = $json['access_token'];
+        $token = $json['access_token'];       
 
-        $payload = JWTAuth::setToken($token)->getPayload();
+        $payloadArray = json_decode(base64_decode(explode('.', $token)[1]), true);
+        $email = $payloadArray['email'];
 
-        $email = $payload->get('email');
-
-
-        \Log::info('login', [
+         \Log::info('login222', [
             'token' => $token,
             'url' => $url,
-            'data' => $payload,
-            'email' => $payload->get('email'),
+            'payload' => $payloadArray
         ]);
 
         $user = User::where('email', $email)->first();
@@ -100,7 +97,7 @@ class AuthController extends Controller
 
         session(['access_token' => $token]);
 
-        $exp = $payload->get('exp');
+        $exp = $payloadArray['exp'];
         $now = time();
         $secondsToExpire = $exp - $now;
 
