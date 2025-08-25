@@ -76,18 +76,15 @@ class AuthController extends Controller
             return response()->json($json, $response->status());
         }
 
-        $token = $json['access_token'];
+        $token = $json['access_token'];       
 
-        $payload = JWTAuth::setToken($token)->getPayload();
+        $payloadArray = json_decode(base64_decode(explode('.', $token)[1]), true);
+        $email = $payloadArray['email'];
 
-        $email = $payload->get('email');
-
-
-        \Log::info('login', [
+         \Log::info('login222', [
             'token' => $token,
             'url' => $url,
-            'data' => $payload,
-            'email' => $payload->get('email'),
+            'payload' => $payloadArray
         ]);
 
         $user = User::where('email', $email)->first();
@@ -100,11 +97,35 @@ class AuthController extends Controller
 
         session(['access_token' => $token]);
 
-        $exp = $payload->get('exp'); 
+        $exp = $payloadArray['exp'];
         $now = time();
         $secondsToExpire = $exp - $now;
 
         return response()->json($response->json(), $response->status())
             ->cookie('access_token', $token, $secondsToExpire / 60, null, null, false, true);
+    }
+
+    public function logout(Request $request)
+    {
+        $url = config('endpoints.prefix_auth') . config('endpoints.prefix') . 'logout';
+        $jwt = $request->cookie('access_token');
+
+        $response = Http::acceptJson()
+            ->withToken($jwt)
+            ->post($url, []);
+
+        $answer = $response->json();
+
+        if (isset($answer['error']) && $answer['error'] === true) {
+            return response()->json($response->json(), $response->status());
+        };
+
+        $cookie = cookie()->forget('access_token');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        auth()->logout();
+
+        return redirect('/')->withCookie($cookie);
     }
 }

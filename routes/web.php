@@ -14,8 +14,7 @@ Route::get('/', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::prefix('dashboard')
-    ->middleware([JwtSessionAuth::class])
+Route::prefix('dashboard')   
     ->group(function () {
         Route::get('/', fn() => view('dashboard.main'))->name('dashboard');
 
@@ -26,8 +25,15 @@ Route::prefix('dashboard')
         Route::post('/bills', [UserActionController::class, 'updateBills'])->name('bills.update');
 
         Route::get('/auto', [UserController::class, 'makeAutoPage'])->name('auto');
-        Route::post('/auto', [UserActionController::class, 'updateAuto'])->name('auto.update');
+        Route::post('/auto', [UserActionController::class, 'updateAuto'])->name('auto.update');    
+        
+        Route::get('/osago', [UserController::class, 'makeOsagoPage'])->name('osago');
+        Route::post('/calc', [UserActionController::class, 'calc'])->name('calc');
+        Route::post('/pay', [UserActionController::class, 'payment'])->name('pay');
 
         Route::get('/policies', [UserController::class, 'makePoliciesPage'])->name('policies');
-        Route::get('/osago', [UserController::class, 'makeOsagoPage'])->name('osago');
+
+        Route::get('/file', [UserActionController::class, 'file'])->name('file');
+
+        Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     });
